@@ -272,14 +272,19 @@ $(".js-data-example-ajax").select2({
         page: params.page
       };
     },
-    processResults: function (data, page) {
-      // parse the results into the format expected by Select2.
-      // since we are using custom formatting functions we do not need to
-      // alter the remote JSON data
-      return {
-        results: data.items
-      };
-    },
+      processResults: function (data, params) {
+        // parse the results into the format expected by Select2
+        // since we are using custom formatting functions we do not need to
+        // alter the remote JSON data, except to indicate that infinite
+        // scrolling can be used
+        params.page = params.page || 1;
+        return {
+          results: data.items,
+          pagination: {
+            more: (params.page * 30) < data.total_count
+          }
+        };
+      },
     cache: true
   },
   escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
@@ -1106,3 +1111,5 @@ $.fn.select2.amd.require(
   $(".js-example-rtl").select2();
 });
 </script>
+
+        Select2 also supports multi-value select boxes. The select below is declared with the 
